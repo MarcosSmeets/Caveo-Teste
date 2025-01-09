@@ -31,26 +31,26 @@
     "ts-jest": "^23.10.5",
     "ts-node-dev": "^1.0.0-pre.40"
   },
- "scripts": {
+  "scripts": {
     "build": "tsc --build",
     "start": "ts-node-dev src/server.ts",
     "test": "NODE_ENV=test PORT=7788 jest",
     "test:watch": "npm run test -- --watchAll"
   },
-  "jest":{
+  "jest": {
     "verbose": true,
     "collectCoverage": true,
     "modulePathIgnorePatterns": [
-        "<rootDir>/node_modules/"
+      "<rootDir>/node_modules/"
     ],
     "roots": [
-        "<rootDir>/__tests__"
+      "<rootDir>/__tests__"
     ],
     "transform": {
-        "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.tsx?$": "ts-jest"
     },
     "textEnvironment": "node",
-    "testPathIgnorePatterns":[
+    "testPathIgnorePatterns": [
       "/node_modules/"
     ],
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
@@ -62,11 +62,6 @@
       "json",
       "node"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick-staged"
-    }
   },
   "author": "",
   "description": ""
