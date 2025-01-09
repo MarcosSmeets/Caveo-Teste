@@ -1,13 +1,13 @@
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import logger from "koa-logger";
-import Router from "koa-router";
 import cors from "koa2-cors";
+import AppDataSource from "../data-source";
+import config from "./config";
+import user from "./routes/user";
 
 const app = new Koa();
-const router = new Router();
-
-const PORT = process.env.PORT || 3000;
+const PORT = config.port || 3000;
 
 app.use(bodyParser());
 app.use(
@@ -16,25 +16,18 @@ app.use(
   })
 );
 app.use(logger());
-app.use(router.routes());
+app.use(user.routes());
 
-router.get("/", async (ctx) => {
-  try {
-    ctx.body = {
-      status: "success",
-      message: "hello, world!",
-    };
-  } catch (error) {
-    console.log(error);
-  }
-});
+AppDataSource.initialize()
+  .then(() => {
+    console.log("Conexão com o banco de dados estabelecida!");
 
-const server = app
-  .listen(PORT, async () => {
-    console.log(`Server listening on port: ${PORT}`);
+    app.listen(PORT, () => {
+      console.log(`Servidor rodando na porta ${PORT}`);
+    });
   })
-  .on("error", (err) => {
-    console.log(err);
+  .catch((err) => {
+    console.error("Erro ao conectar com o banco de dados:", err);
   });
 
-export default server;
+export default app;
