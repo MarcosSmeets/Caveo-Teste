@@ -5,7 +5,9 @@ import { createUser, getUsers } from "../services/user_service";
 
 const router = new Router();
 
-router.get("/users/", async (ctx) => {
+router.prefix("/users");
+
+router.get("", async (ctx) => {
   try {
     ctx.status = 200;
     ctx.body = await getUsers();
@@ -14,7 +16,7 @@ router.get("/users/", async (ctx) => {
   }
 });
 
-router.post("/users/", async (ctx) => {
+router.post("", async (ctx) => {
   try {
     const body = plainToClass(CreateUserDto, ctx.request.body);
 

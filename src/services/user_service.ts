@@ -4,6 +4,8 @@ import {
   createNewUser,
   getAllUsers,
   getUserByEmail,
+  getUserById,
+  updateUserData,
 } from "../repository/user_repository";
 
 export const getUsers = async (): Promise<User[]> => {
@@ -25,4 +27,44 @@ export const createUser = async (userDto: CreateUserDto): Promise<User> => {
   const newUser = await createNewUser(user);
 
   return newUser;
+};
+
+export const getUser = async (id: string): Promise<User | null> => {
+  const user = await getUserById(id);
+
+  if (!user) throw new Error("User not found!");
+
+  return user;
+};
+
+export const updateUser = async (
+  id: string,
+  userDto: CreateUserDto
+): Promise<User> => {
+  const user = await getUserById(id);
+
+  if (!user) throw new Error("User not found!");
+
+  user.name = userDto.name;
+  user.email = userDto.email;
+  user.role = userDto.role;
+  user.updatedAt = new Date();
+
+  const updatedUser = await updateUserData(user);
+
+  return updatedUser;
+};
+
+export const getUserEmail = async (email: string): Promise<User | null> => {
+  return getUserByEmail(email);
+};
+
+export const authenticateUser = async (emil: string): Promise<String> => {
+  const user = await getUserByEmail(emil);
+
+  if (!user) throw new Error("User not found!");
+
+  const token = "token";
+
+  return token;
 };

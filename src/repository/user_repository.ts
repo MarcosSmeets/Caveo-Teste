@@ -11,13 +11,21 @@ export const createNewUser = async (user: User): Promise<User> => {
   return await repository.save(user);
 };
 
-export const getUserByEmail = async (email: string): Promise<User> => {
+export const getUserByEmail = async (email: string): Promise<User | null> => {
   const repository = AppDataSource.getRepository(User);
   const user = await repository.findOne({ where: { email } });
 
-  if (!user) {
-    throw new Error("User not found!");
-  }
+  return user;
+};
+
+export const getUserById = async (id: string): Promise<User | null> => {
+  const repository = AppDataSource.getRepository(User);
+  const user = await repository.findOne({ where: { id } });
 
   return user;
+};
+
+export const updateUserData = async (user: User): Promise<User> => {
+  const repository = AppDataSource.getRepository(User);
+  return await repository.save(user);
 };
