@@ -63,8 +63,6 @@ export const updateUser = async (userDto: UpdateUserDto): Promise<User> => {
 
   const updatedUser = await updateUserData(user);
 
-  console.log(updateUser);
-
   return updatedUser;
 };
 

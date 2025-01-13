@@ -5,16 +5,12 @@ const aws = require("aws-sdk");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
-aws.config.update({ region: "sa-east-1" });
+aws.config.update({ region: process.env.REGION });
 
-const cognito = new aws.CognitoIdentityServiceProvider({
-  accessKeyId: 'your_access_key_id',
-  secretAccessKey: 'your_secret_access_key',
-  region: 'sa-east-1',
-});
-const CLIENT_ID = "1b6mhedf268vq61l1chiekndg7";
-const JWT_SECRET = "1ndsakwqwds";
-const CLIENT_SECRET = "1ftkkun2ebu8fth9n349fadclrmmrpkdb0i6t2g0tkjd0gk5mhi1";
+const cognito = new aws.CognitoIdentityServiceProvider();
+const CLIENT_ID = process.env.CLIENT_ID;
+const JWT_SECRET = process.env.JWT_SECRET
+const CLIENT_SECRET = process.env.CLIENT_SECRET
 
 export const authenticateJWT = async (token: string) => {
   try {
@@ -44,8 +40,6 @@ export const authorizationMiddleware = (requiredScopes: string[]) => {
     }
 
     const userGroups = await authenticateJWT(token);
-
-    console.log(userGroups);
 
     if (!userGroups) {
       ctx.status = 403;
@@ -85,8 +79,6 @@ export const signupCognito = async (
 
   const data = await cognito.signUp(params).promise();
 
-  console.log(data)
-
   return data;
 };
 
@@ -113,7 +105,6 @@ async function getSecretHash(username: string): Promise<string> {
     .createHmac("sha256", CLIENT_SECRET)
     .update(`${username}${CLIENT_ID}`)
     .digest("base64");
-  console.log("Generated SecretHash:", hash);
   return hash;
 }
 
