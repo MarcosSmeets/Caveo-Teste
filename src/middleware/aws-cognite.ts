@@ -7,7 +7,11 @@ const crypto = require("crypto");
 
 aws.config.update({ region: "sa-east-1" });
 
-const cognito = new aws.CognitoIdentityServiceProvider();
+const cognito = new aws.CognitoIdentityServiceProvider({
+  accessKeyId: 'your_access_key_id',
+  secretAccessKey: 'your_secret_access_key',
+  region: 'sa-east-1',
+});
 const CLIENT_ID = "1b6mhedf268vq61l1chiekndg7";
 const JWT_SECRET = "1ndsakwqwds";
 const CLIENT_SECRET = "1ftkkun2ebu8fth9n349fadclrmmrpkdb0i6t2g0tkjd0gk5mhi1";
@@ -64,7 +68,7 @@ export const authorizationMiddleware = (requiredScopes: string[]) => {
 export const signupCognito = async (
   username: string,
   email: string,
-  password: string
+  password: string,
 ) => {
   const params = {
     ClientId: CLIENT_ID,
@@ -80,6 +84,8 @@ export const signupCognito = async (
   };
 
   const data = await cognito.signUp(params).promise();
+
+  console.log(data)
 
   return data;
 };
@@ -109,4 +115,14 @@ async function getSecretHash(username: string): Promise<string> {
     .digest("base64");
   console.log("Generated SecretHash:", hash);
   return hash;
+}
+
+export async function addToGroup(username: string, group: string, userPoolId: string){
+  const groupParams = {
+    UserPoolId: userPoolId,
+    Username: username,
+    GroupName: group,
+  };
+
+  await cognito.adminAddUserToGroup(groupParams).promise();
 }
